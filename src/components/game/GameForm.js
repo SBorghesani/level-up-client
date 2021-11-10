@@ -30,7 +30,8 @@ export const GameForm = () => {
             })
         }
     }
-
+    console.log('gametypes',gameTypes)
+    console.log(editMode)
     console.log(currentGame)
     useEffect(() => {
         getGameTypes().then(data => setGameTypes(data))
@@ -84,6 +85,10 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="numberOfPlayers">Number of Players: </label>
                     <input type="number" name="numberOfPlayers" required autoFocus className="form-control"
+                    defaultValue=
+                        {
+                            (editMode) ? currentGame.numberOfPlayers : 0
+                        }
                         value={currentGame?.numberOfPlayers}
                         onChange={handleControlledInputChange}
                     />

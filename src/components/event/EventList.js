@@ -73,6 +73,9 @@ export const EventList = () => {
                                     onClick={() => joinEvent(event.id).then(() => eventFetcher())}
                                     >Join</button>
                         }
+                        <div>
+                            <button className="btn-edit" onClick={() => history.push(`/events/edit/${event.id}`)}>Edit</button>
+                        </div>
                     </section>
                 })
             }

@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { createEvent } from './EventManager.js'
+import { useHistory, useParams } from "react-router-dom"
+import { createEvent, updateEvent, getEvent } from './EventManager.js'
 import { getGames } from '../game/GameManager.js'
 
 
 export const EventForm = () => {
     const history = useHistory()
-
-    const [currentEvent, setEvent] = useState({
-        gameId: 0,
-        description: "",
-        date: "",
-        time: "",
-    })
+    const [editMode, toggleEditMode] = useState(false)
+    const [currentEvent, setEvent] = useState({})
+    const {eventId} = useParams()
     const [games, setGames] = useState([])
+
+    const getEventToEdit = () => {
+        if (eventId) {
+            toggleEditMode(true)
+            getEvent(eventId)
+                .then(foundEvent => setEvent(foundEvent))
+        } else {
+            setCurrentEvent({
+                gameId: 0,
+                description: "",
+                date: "",
+                time: "",
+            })
+        }
+    }
+
+    useEffect(() => {
+        getEventToEdit()
+    }, {})
 
     useEffect(() => {
         getGames().then(data => setGames(data))
@@ -27,12 +42,13 @@ export const EventForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Schedule New Event</h2>
+            <h2 className="gameForm__title">
+                { editMode ? 'Edit Event: ' : 'Schedule New Event: '}</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="gameId">Game: </label>
                     <select name="gameId" className="form-control"
-                        value={ currentEvent.gameId }
+                        value={ currentEvent?.gameId }
                         onChange={ handleControlledInputChange }>
                         <option value="0">Select a game...</option>
                         {
@@ -47,7 +63,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="description">Description: </label>
                     <input type="text" name="description" required autoFocus className="form-control"
-                        value={currentEvent.description}
+                        value={currentEvent?.description}
                         onChange={handleControlledInputChange}
                     />
                 </div>
@@ -75,9 +91,13 @@ export const EventForm = () => {
                         date: currentEvent.date,
                         time: currentEvent.time
                     }
-
-                    createEvent(newEvent)
-                        .then(() => history.push("/events"))
+                    {
+                        editMode ?
+                            updateEvent(newEvent, eventId)
+                                .then(() => {history.push('/events')})
+                            : createEvent(newEvent)
+                                .then(() => history.push("/events"))
+                    }
                 }}
                 className="btn btn-primary">Create Event</button>
         </form>
