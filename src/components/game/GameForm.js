@@ -19,10 +19,14 @@ export const GameForm = () => {
         if (gameId) {
             toggleEditMode(true)
             getGame(gameId)
-                .then(foundGame => setCurrentGame(foundGame))
+                .then(foundGame => setCurrentGame({
+                    ...foundGame,
+                    skillLevel: foundGame.skill_level,
+                    numberOfPlayers: foundGame.number_of_players,
+                    gameTypeId: foundGame.game_type.id}))
         } else {
             setCurrentGame({
-                skillLevel: 1,
+                skillLevel: 0,
                 numberOfPlayers: 0,
                 title: "",
                 maker: "",
@@ -32,14 +36,14 @@ export const GameForm = () => {
     }
     console.log('gametypes',gameTypes)
     console.log(editMode)
-    console.log(currentGame)
+    console.log('current game', currentGame)
     useEffect(() => {
         getGameTypes().then(data => setGameTypes(data))
     }, [])
 
     useEffect(() => {
         getGameToEdit()
-    }, {})
+    }, [gameId])
 
     const handleControlledInputChange = (event) => {
         const newGame = Object.assign({}, currentGame)
@@ -64,9 +68,9 @@ export const GameForm = () => {
                 <label htmlFor="gameType">Game Type: </label>
                 <select type="text" name="gameTypeId" className="form-control"
                     placeholder="Game Type"
-                    defaultValue="Choose a type of game"
+                    // defaultValue={currentGame?.game_type?.id}
                     onChange={handleControlledInputChange}>
-                    <option>Choose a Game Type</option>
+                    <option value={editMode ? parseInt(currentGame?.game_type?.id) : 1}>{currentGame?.game_type?.label}</option>
                     {
                         gameTypes.map(gt => <option name="gameTypeId" value={gt.id}>{gt.label}</option>)
                     }
@@ -85,10 +89,7 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="numberOfPlayers">Number of Players: </label>
                     <input type="number" name="numberOfPlayers" required autoFocus className="form-control"
-                    defaultValue=
-                        {
-                            (editMode) ? currentGame.numberOfPlayers : 0
-                        }
+                        // defaultValue={editMode ? currentGame?.number_of_players : currentGame?.numberOfPlayers}
                         value={currentGame?.numberOfPlayers}
                         onChange={handleControlledInputChange}
                     />

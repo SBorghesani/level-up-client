@@ -15,9 +15,13 @@ export const EventForm = () => {
         if (eventId) {
             toggleEditMode(true)
             getEvent(eventId)
-                .then(foundEvent => setEvent(foundEvent))
+                .then(foundEvent => setEvent({
+                    ...foundEvent,
+                    gameId: foundEvent.game.id,
+                    date: foundEvent.date,
+                    time: foundEvent.time}))
         } else {
-            setCurrentEvent({
+            setEvent({
                 gameId: 0,
                 description: "",
                 date: "",
@@ -71,13 +75,13 @@ export const EventForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="date">Event Date: </label>
-                    <input name="date" onChange={handleControlledInputChange} type="date" id="date" className="form-control" placeholder="Select a Date" required />
+                    <input name="date" value={currentEvent?.date} onChange={handleControlledInputChange} type="date" id="date" className="form-control" placeholder="Select a Date" required />
                 </div>
             </fieldset>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="time">Event Time: </label>
-                    <input name="time" onChange={handleControlledInputChange} type="time" id="time" className="form-control" placeholder="Select a Time" required />
+                    <input name="time" value={currentEvent?.time} onChange={handleControlledInputChange} type="time" id="time" className="form-control" placeholder="Select a Time" required />
                 </div>
             </fieldset>
 
