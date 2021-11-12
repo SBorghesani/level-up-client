@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useHistory } from 'react-router-dom'
 import { getGames } from "./GameManager.js"
+import "./GameList.css"
 
 export const GameList = (props) => {
     const history = useHistory()

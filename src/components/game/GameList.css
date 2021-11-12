@@ -1,0 +1,14 @@
+.game {
+    flex-basis: 25%;
+	border:1px black dashed;
+    padding: 1rem;
+    margin-bottom: 2em;
+}
+
+.games {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-top: 3rem;
+}
